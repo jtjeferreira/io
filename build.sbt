@@ -21,7 +21,21 @@ lazy val ioRoot = (project in file("."))
       )),
     commonSettings,
     name := "IO Root",
-    skip in publish := true
+    skip in publish := true,
+    onLoadMessage := {
+      """      _     
+        |     (_)___ 
+        |    / / __ \
+        |   / / /_/ /
+        |  /_/\____/ 
+        |Welcome to the build for sbt/io.
+        |""".stripMargin +
+          (if (sys.props("java.specification.version") != "1.8")
+            s"""!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+               |  Java versions is ${sys.props("java.specification.version")}. We recommend 1.8.
+               |!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!""".stripMargin
+          else "")
+    }
   )
 
 // Path, IO (formerly FileUtilities), NameFilter and other I/O utility classes
@@ -31,7 +45,7 @@ val io = (project in file("io"))
     commonSettings,
     name := "IO",
     libraryDependencies ++= {
-      Vector(scalaCompiler.value % Test, scalaCheck % Test, scalatest.value % Test)
+      Vector(scalaCompiler.value % Test, scalaCheck % Test, scalatest % Test)
     } ++ Vector(appleFileEvents),
     libraryDependencies ++= Seq(jna, jnaPlatform),
 
